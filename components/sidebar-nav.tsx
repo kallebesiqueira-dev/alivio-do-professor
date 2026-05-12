@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { BookOpenCheck, CalendarDays, ClipboardList, Home, Settings, Sparkles, Trash2, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const navigationItems = [
+const primaryNav = [
   { href: "/dashboard", label: "Painel", icon: Home },
   { href: "/upload", label: "Enviar atividade", icon: Upload },
   { href: "/corrections", label: "Revisar correções", icon: ClipboardList },
@@ -23,9 +23,10 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-1 flex-col justify-between">
+    <nav className="flex flex-1 flex-col">
+      {/* Primary navigation */}
       <ul className="space-y-0.5">
-        {navigationItems.map(({ href, label, icon: Icon }) => {
+        {primaryNav.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
           return (
             <li key={href}>
@@ -33,18 +34,13 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
                 href={href}
                 onClick={onNavigate}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium",
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   isActive
                     ? "bg-amber-500/15 text-amber-300"
                     : "text-slate-300 hover:bg-white/8 hover:text-white",
                 )}
               >
-                <Icon
-                  className={cn(
-                    "h-4 w-4 shrink-0",
-                    isActive ? "text-amber-400" : "text-slate-400",
-                  )}
-                />
+                <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-amber-400" : "text-slate-400")} />
                 {label}
               </Link>
             </li>
@@ -52,23 +48,19 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
         })}
       </ul>
 
-      <div className="border-t border-white/8 pt-2">
+      {/* Separator + Lixeira immediately below primary nav */}
+      <div className="mt-3 border-t border-white/8 pt-3">
         <Link
           href="/trash"
           onClick={onNavigate}
           className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium",
+            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
             pathname === "/trash"
               ? "bg-rose-500/15 text-rose-300"
               : "text-slate-400 hover:bg-white/8 hover:text-slate-300",
           )}
         >
-          <Trash2
-            className={cn(
-              "h-4 w-4 shrink-0",
-              pathname === "/trash" ? "text-rose-400" : "text-slate-500",
-            )}
-          />
+          <Trash2 className={cn("h-4 w-4 shrink-0", pathname === "/trash" ? "text-rose-400" : "text-slate-500")} />
           Lixeira
         </Link>
       </div>
