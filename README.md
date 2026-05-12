@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Alívio do Professor
 
-## Getting Started
+Plataforma SaaS para professores brasileiros do ensino fundamental e médio que automatiza o ciclo de correção de atividades com IA, mantendo o professor no controle de cada aprovação.
 
-First, run the development server:
+## Funcionalidades
+
+- Upload de atividades em PDF, imagem ou texto
+- Correção assistida por IA com nota sugerida, feedback e pontos de atenção
+- Revisão manual obrigatória antes de qualquer aprovação
+- Planejador de aulas com objetivos, atividades e avaliação gerados por IA
+- Relatório consolidado da turma com alunos em dificuldade e erros frequentes
+- Lixeira com soft-delete, restauração e exclusão permanente
+
+## Screenshots
+
+| Landing | Login |
+|---------|-------|
+| ![Landing](docs/screenshots/landing.png) | ![Login](docs/screenshots/login.png) |
+
+| Dashboard | Upload |
+|-----------|--------|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Upload](docs/screenshots/upload.png) |
+
+| Correções | Planejador |
+|-----------|------------|
+| ![Correções](docs/screenshots/corrections.png) | ![Planejador](docs/screenshots/planner.png) |
+
+| Lixeira |
+|---------|
+| ![Lixeira](docs/screenshots/trash.png) |
+
+## Stack
+
+| Camada | Tecnologia |
+|--------|-----------|
+| Framework | Next.js 16 (App Router, Webpack) |
+| UI | React 19 + Tailwind CSS 4 |
+| Banco de dados | Supabase (PostgreSQL 15 + RLS) |
+| Autenticação | Supabase Auth (e-mail/senha) |
+| Storage | Supabase Storage (bucket privado) |
+| IA | Groq — `llama-3.3-70b-versatile` |
+| Extração de PDF | pdf-parse v2 |
+| Validação | Zod |
+
+## Configuração
+
+### 1. Variáveis de ambiente
+
+Copie o exemplo e preencha:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Variável | Descrição |
+|----------|-----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave pública do Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | Chave de serviço (somente servidor) |
+| `GROQ_API_KEY` | Chave da API Groq (console.groq.com) |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. Banco de dados
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+No SQL Editor do Supabase, execute o conteúdo de [`supabase/schema.sql`](supabase/schema.sql). O script é idempotente — pode ser reaplicado sem perda de dados.
 
-## Learn More
+### 3. Autenticação
 
-To learn more about Next.js, take a look at the following resources:
+No painel do Supabase: **Authentication → Providers → Email** — desative a confirmação de e-mail para desenvolvimento local.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Rodar
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+Acesse [http://localhost:3000](http://localhost:3000).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Estrutura do projeto
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/
+  login/          # Autenticação do professor
+  dashboard/      # Painel com resumo e atividade recente
+  upload/         # Envio de atividades e processamento em lote
+  corrections/    # Revisão manual das correções
+  reports/        # Relatório consolidado da turma
+  planner/        # Planejador de aulas com IA
+  trash/          # Lixeira com restauração e exclusão permanente
+  api/            # Route Handlers (assignments, corrections, planner, reports, trash)
+
+components/       # Componentes de UI reutilizáveis
+lib/
+  ai/             # Integração com Groq (cliente, planner, correction)
+  ocr/            # Extração de texto de PDF e imagem
+  server/         # Queries server-side (data.ts)
+  supabase/       # Clientes Supabase (browser, server, admin, middleware)
+supabase/
+  schema.sql      # Schema completo com RLS e políticas
+  migrations/     # Migrações incrementais
+```
+
+## Fluxo principal
+
+```
+Upload (PDF/imagem/texto)
+  → Extração de texto (pdf-parse)
+  → Processamento com IA (Groq)
+  → Correção pendente de revisão
+  → Professor edita nota e feedback
+  → Aprovação ou rejeição manual
+  → Relatório consolidado
+```
+
+## Segurança
+
+Veja [SECURITY.md](SECURITY.md) para reportar vulnerabilidades e detalhes sobre as práticas adotadas.
+
+## Licença
+
+MIT — veja [LICENSE](LICENSE).
