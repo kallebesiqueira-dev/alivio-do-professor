@@ -14,15 +14,15 @@ function getErrorMessage(error: unknown) {
   if (error instanceof z.ZodError) {
     return error.issues[0]?.message ?? "Não foi possível validar os dados.";
   }
-
   if (error instanceof Error) {
     return error.message;
   }
-
   return "Ocorreu um erro inesperado. Tente novamente.";
 }
 
 export async function signInAction(formData: FormData) {
+  let errorMessage: string | null = null;
+
   try {
     const input = authSchema.parse({
       email: formData.get("email"),
@@ -32,18 +32,23 @@ export async function signInAction(formData: FormData) {
     const supabase = await createClient();
     const { error } = await supabase.auth.signInWithPassword(input);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     revalidatePath("/", "layout");
-    redirect("/dashboard");
   } catch (error) {
-    redirect(`/login?message=${encodeURIComponent(getErrorMessage(error))}`);
+    errorMessage = getErrorMessage(error);
+  }
+
+  if (errorMessage) {
+    redirect(`/login?message=${encodeURIComponent(errorMessage)}`);
+  } else {
+    redirect("/dashboard");
   }
 }
 
 export async function signUpAction(formData: FormData) {
+  let errorMessage: string | null = null;
+
   try {
     const input = authSchema.parse({
       email: formData.get("email"),
@@ -53,16 +58,18 @@ export async function signUpAction(formData: FormData) {
     const supabase = await createClient();
     const { error } = await supabase.auth.signUp(input);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
+  } catch (error) {
+    errorMessage = getErrorMessage(error);
+  }
 
+  if (errorMessage) {
+    redirect(`/login?message=${encodeURIComponent(errorMessage)}`);
+  } else {
     redirect(
       "/login?message=" +
         encodeURIComponent("Conta criada. Faça login para acessar o painel do professor."),
     );
-  } catch (error) {
-    redirect(`/login?message=${encodeURIComponent(getErrorMessage(error))}`);
   }
 }
 

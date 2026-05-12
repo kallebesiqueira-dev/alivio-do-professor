@@ -17,17 +17,21 @@ Plataforma SaaS para professores brasileiros do ensino fundamental e médio que 
 |---------|-------|
 | ![Landing](docs/screenshots/landing.png) | ![Login](docs/screenshots/login.png) |
 
-| Dashboard | Upload |
-|-----------|--------|
+| Dashboard | Enviar atividade |
+|-----------|-----------------|
 | ![Dashboard](docs/screenshots/dashboard.png) | ![Upload](docs/screenshots/upload.png) |
 
-| Correções | Planejador |
-|-----------|------------|
-| ![Correções](docs/screenshots/corrections.png) | ![Planejador](docs/screenshots/planner.png) |
+| Revisar correções | Relatório da turma |
+|-------------------|--------------------|
+| ![Correções](docs/screenshots/corrections.png) | ![Relatório](docs/screenshots/reports.png) |
 
-| Lixeira |
-|---------|
-| ![Lixeira](docs/screenshots/trash.png) |
+| Planejador de aulas | Lixeira |
+|---------------------|---------|
+| ![Planejador](docs/screenshots/planner.png) | ![Lixeira](docs/screenshots/trash.png) |
+
+| Minha conta |
+|-------------|
+| ![Conta](docs/screenshots/account.png) |
 
 ## Stack
 
