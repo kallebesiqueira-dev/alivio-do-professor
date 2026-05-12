@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpenCheck, ClipboardList, Home, Settings, Sparkles, Trash2, Upload } from "lucide-react";
+import { BookOpenCheck, CalendarDays, ClipboardList, Home, Settings, Sparkles, Trash2, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigationItems = [
@@ -11,6 +11,7 @@ const navigationItems = [
   { href: "/corrections", label: "Revisar correções", icon: ClipboardList },
   { href: "/reports", label: "Relatório da turma", icon: BookOpenCheck },
   { href: "/planner", label: "Planejador de aulas", icon: Sparkles },
+  { href: "/calendar", label: "Calendário", icon: CalendarDays },
   { href: "/account", label: "Minha conta", icon: Settings },
 ];
 

@@ -99,6 +99,21 @@ export type TeacherReport = ReportSummary & {
   appliedFilters: ReportFilters;
 };
 
+export type CalendarEventType = "aula" | "prova" | "ferias" | "recuperacao" | "reuniao" | "outro";
+
+export type CalendarEvent = {
+  id: string;
+  teacher_id: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  type: CalendarEventType;
+  turma: string | null;
+  description: string | null;
+  deleted_at: string | null;
+  created_at: string;
+};
+
 export type LessonPlanResult = {
   topic: string;
   gradeLevel: string;

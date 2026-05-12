@@ -54,6 +54,7 @@ export async function updateSession(request: NextRequest) {
     "/planner",
     "/trash",
     "/account",
+    "/calendar",
   ].some((path) => request.nextUrl.pathname.startsWith(path));
 
   if (isProtectedRoute && !user) {
