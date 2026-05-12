@@ -64,6 +64,7 @@ const AUTH_PAGES = [
   { name: "reports", path: "/reports", waitFor: "section" },
   { name: "trash", path: "/trash", waitFor: "section" },
   { name: "account", path: "/account", waitFor: "section" },
+  { name: "calendar", path: "/calendar", waitFor: "section" },
 ];
 
 async function snap(page, name, pagePath, waitFor) {

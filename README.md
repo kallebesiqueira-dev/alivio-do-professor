@@ -9,6 +9,7 @@ Plataforma SaaS para professores brasileiros do ensino fundamental e médio que 
 - Revisão manual obrigatória antes de qualquer aprovação
 - Planejador de aulas com objetivos, atividades e avaliação gerados por IA
 - Relatório consolidado da turma com alunos em dificuldade e erros frequentes
+- Calendário escolar com aulas, provas, férias, recuperação, reuniões e mais
 - Lixeira com soft-delete, restauração e exclusão permanente
 
 ## Screenshots
@@ -29,9 +30,9 @@ Plataforma SaaS para professores brasileiros do ensino fundamental e médio que 
 |---------------------|---------|
 | ![Planejador](docs/screenshots/planner.png) | ![Lixeira](docs/screenshots/trash.png) |
 
-| Minha conta |
-|-------------|
-| ![Conta](docs/screenshots/account.png) |
+| Minha conta | Calendário escolar |
+|-------------|-------------------|
+| ![Conta](docs/screenshots/account.png) | ![Calendário](docs/screenshots/calendar.png) |
 
 ## Stack
 
@@ -91,7 +92,8 @@ app/
   reports/        # Relatório consolidado da turma
   planner/        # Planejador de aulas com IA
   trash/          # Lixeira com restauração e exclusão permanente
-  api/            # Route Handlers (assignments, corrections, planner, reports, trash)
+  calendar/       # Calendário escolar
+  api/            # Route Handlers (assignments, corrections, planner, reports, trash, calendar)
 
 components/       # Componentes de UI reutilizáveis
 lib/
