@@ -21,7 +21,7 @@ type EventType = "aula" | "prova" | "ferias" | "recuperacao" | "reuniao" | "outr
 type CalendarEvent = {
   id: string;
   title: string;
-  start_date: string; // YYYY-MM-DD
+  start_date: string;
   end_date: string;
   type: EventType;
   turma?: string | null;
@@ -41,16 +41,19 @@ type FormState = {
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const EVENT_META: Record<EventType, { label: string; dot: string; chip: string; badge: string }> = {
-  aula:        { label: "Aula",        dot: "bg-amber-400",   chip: "bg-amber-100 text-amber-800 border-amber-200",   badge: "bg-amber-50 border-amber-300 text-amber-800" },
-  prova:       { label: "Prova",       dot: "bg-rose-400",    chip: "bg-rose-100 text-rose-800 border-rose-200",       badge: "bg-rose-50 border-rose-300 text-rose-800" },
+  aula:        { label: "Aula",        dot: "bg-amber-400",   chip: "bg-amber-100 text-amber-800 border-amber-200",      badge: "bg-amber-50 border-amber-300 text-amber-800" },
+  prova:       { label: "Prova",       dot: "bg-rose-400",    chip: "bg-rose-100 text-rose-800 border-rose-200",          badge: "bg-rose-50 border-rose-300 text-rose-800" },
   ferias:      { label: "Férias",      dot: "bg-emerald-400", chip: "bg-emerald-100 text-emerald-800 border-emerald-200", badge: "bg-emerald-50 border-emerald-300 text-emerald-800" },
-  recuperacao: { label: "Recuperação", dot: "bg-violet-400",  chip: "bg-violet-100 text-violet-800 border-violet-200", badge: "bg-violet-50 border-violet-300 text-violet-800" },
-  reuniao:     { label: "Reunião",     dot: "bg-sky-400",     chip: "bg-sky-100 text-sky-800 border-sky-200",           badge: "bg-sky-50 border-sky-300 text-sky-800" },
-  outro:       { label: "Outro",       dot: "bg-slate-400",   chip: "bg-slate-100 text-slate-700 border-slate-200",     badge: "bg-slate-50 border-slate-300 text-slate-700" },
+  recuperacao: { label: "Recuperação", dot: "bg-violet-400",  chip: "bg-violet-100 text-violet-800 border-violet-200",   badge: "bg-violet-50 border-violet-300 text-violet-800" },
+  reuniao:     { label: "Reunião",     dot: "bg-sky-400",     chip: "bg-sky-100 text-sky-800 border-sky-200",             badge: "bg-sky-50 border-sky-300 text-sky-800" },
+  outro:       { label: "Outro",       dot: "bg-slate-400",   chip: "bg-slate-100 text-slate-700 border-slate-200",       badge: "bg-slate-50 border-slate-300 text-slate-700" },
 };
 
 const DAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-const MONTH_NAMES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const MONTH_NAMES = [
+  "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+  "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro",
+];
 
 const EMPTY_FORM: FormState = {
   title: "", start_date: "", end_date: "", type: "aula", turma: "", description: "",
@@ -72,7 +75,7 @@ function eventSpansDay(event: CalendarEvent, ymd: string) {
 }
 
 function buildCalendarDays(year: number, month: number) {
-  const firstDay = new Date(year, month - 1, 1).getDay(); // 0=Sun
+  const firstDay = new Date(year, month - 1, 1).getDay();
   const daysInMonth = new Date(year, month, 0).getDate();
   const cells: Array<number | null> = [];
   for (let i = 0; i < firstDay; i++) cells.push(null);
@@ -92,7 +95,11 @@ function getUpcoming(events: CalendarEvent[], days = 30) {
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
-function TypeButton({ type, selected, onClick }: { type: EventType; selected: boolean; onClick: () => void }) {
+function TypeButton({
+  type, selected, onClick,
+}: {
+  type: EventType; selected: boolean; onClick: () => void;
+}) {
   const meta = EVENT_META[type];
   return (
     <button
@@ -100,16 +107,22 @@ function TypeButton({ type, selected, onClick }: { type: EventType; selected: bo
       onClick={onClick}
       className={cn(
         "flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-all",
-        selected ? meta.badge + " shadow-sm" : "border-border bg-surface text-muted hover:border-primary/40",
+        selected
+          ? cn(meta.badge, "shadow-sm")
+          : "border-border bg-white text-muted hover:border-primary/40",
       )}
     >
-      <span className={cn("h-2 w-2 rounded-full", meta.dot)} />
+      <span className={cn("h-2 w-2 shrink-0 rounded-full", meta.dot)} />
       {meta.label}
     </button>
   );
 }
 
-function EventChip({ event, onEdit, onDelete }: { event: CalendarEvent; onEdit: () => void; onDelete: () => void }) {
+function EventChip({
+  event, onEdit, onDelete,
+}: {
+  event: CalendarEvent; onEdit: () => void; onDelete: () => void;
+}) {
   const meta = EVENT_META[event.type];
   const isMultiDay = event.start_date !== event.end_date;
   return (
@@ -130,10 +143,20 @@ function EventChip({ event, onEdit, onDelete }: { event: CalendarEvent; onEdit: 
         )}
       </div>
       <div className="flex shrink-0 gap-1">
-        <button type="button" onClick={onEdit} className="rounded-md p-1 opacity-60 hover:opacity-100">
+        <button
+          type="button"
+          onClick={onEdit}
+          className="rounded-md p-1 opacity-60 hover:opacity-100"
+          aria-label="Editar evento"
+        >
           <Pencil className="h-3.5 w-3.5" />
         </button>
-        <button type="button" onClick={onDelete} className="rounded-md p-1 opacity-60 hover:opacity-100">
+        <button
+          type="button"
+          onClick={onDelete}
+          className="rounded-md p-1 opacity-60 hover:opacity-100"
+          aria-label="Remover evento"
+        >
           <Trash2 className="h-3.5 w-3.5" />
         </button>
       </div>
@@ -150,7 +173,7 @@ export function CalendarView() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState<string | null>(today);
-  const [form, setForm] = useState<FormState | null>(null); // null = closed
+  const [form, setForm] = useState<FormState | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -175,6 +198,12 @@ export function CalendarView() {
   function nextMonth() {
     if (month === 12) { setYear(y => y + 1); setMonth(1); }
     else setMonth(m => m + 1);
+  }
+
+  function selectDay(ymd: string) {
+    setSelectedDay(ymd);
+    setForm(null);
+    setEditingId(null);
   }
 
   function openAdd(day: string) {
@@ -234,16 +263,17 @@ export function CalendarView() {
     ? events.filter(e => eventSpansDay(e, selectedDay))
     : [];
 
-  // Stats for header
   const thisMonthYMD = `${year}-${String(month).padStart(2, "0")}`;
-  const statsMonth = events.filter(e => e.start_date.startsWith(thisMonthYMD) || e.end_date.startsWith(thisMonthYMD));
+  const statsMonth = events.filter(
+    e => e.start_date.startsWith(thisMonthYMD) || e.end_date.startsWith(thisMonthYMD),
+  );
   const countByType = (t: EventType) => statsMonth.filter(e => e.type === t).length;
 
   return (
     <div className="space-y-5">
       {/* Header */}
-      <section className="card-shadow rounded-xl border border-border bg-white/90 p-6 backdrop-blur sm:p-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <section className="card-shadow rounded-xl border border-border bg-white/90 p-5 backdrop-blur sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.28em] text-primary">Organização</p>
             <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -253,9 +283,10 @@ export function CalendarView() {
               Organize aulas, provas, férias e recuperações num só lugar.
             </p>
           </div>
+
           {/* Quick stats */}
           <div className="flex flex-wrap gap-2">
-            {(["aula","prova","ferias","recuperacao"] as EventType[]).map(t => {
+            {(["aula", "prova", "ferias", "recuperacao"] as EventType[]).map(t => {
               const n = countByType(t);
               if (!n) return null;
               return (
@@ -268,30 +299,38 @@ export function CalendarView() {
         </div>
 
         {/* Legend */}
-        <div className="mt-5 flex flex-wrap gap-2 border-t border-border pt-4">
+        <div className="mt-5 flex flex-wrap gap-3 border-t border-border pt-4">
           {(Object.keys(EVENT_META) as EventType[]).map(t => (
             <span key={t} className="flex items-center gap-1.5 text-xs text-muted">
-              <span className={cn("h-2.5 w-2.5 rounded-full", EVENT_META[t].dot)} />
+              <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full", EVENT_META[t].dot)} />
               {EVENT_META[t].label}
             </span>
           ))}
         </div>
       </section>
 
-      <div className="grid gap-5 lg:grid-cols-[1fr_340px]">
+      <div className="grid gap-5 xl:grid-cols-[1fr_360px]">
         {/* ── Calendar grid ── */}
         <section className="card-shadow rounded-xl border border-border bg-white/90 p-5 backdrop-blur">
           {/* Month navigation */}
           <div className="mb-5 flex items-center justify-between">
-            <button type="button" onClick={prevMonth}
-              className="rounded-lg border border-border p-2 text-muted hover:bg-surface hover:text-foreground">
+            <button
+              type="button"
+              onClick={prevMonth}
+              className="rounded-lg border border-border p-2 text-muted hover:bg-surface hover:text-foreground"
+              aria-label="Mês anterior"
+            >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <h2 className="text-base font-bold text-foreground">
               {MONTH_NAMES[month - 1]} {year}
             </h2>
-            <button type="button" onClick={nextMonth}
-              className="rounded-lg border border-border p-2 text-muted hover:bg-surface hover:text-foreground">
+            <button
+              type="button"
+              onClick={nextMonth}
+              className="rounded-lg border border-border p-2 text-muted hover:bg-surface hover:text-foreground"
+              aria-label="Próximo mês"
+            >
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
@@ -299,10 +338,13 @@ export function CalendarView() {
           {/* Day headers */}
           <div className="mb-1 grid grid-cols-7">
             {DAY_LABELS.map((d, i) => (
-              <div key={d} className={cn(
-                "pb-1 text-center text-[11px] font-semibold uppercase tracking-wide",
-                i === 0 || i === 6 ? "text-muted/60" : "text-muted",
-              )}>
+              <div
+                key={d}
+                className={cn(
+                  "pb-1 text-center text-[11px] font-semibold uppercase tracking-wide",
+                  i === 0 || i === 6 ? "text-muted/60" : "text-muted",
+                )}
+              >
                 {d}
               </div>
             ))}
@@ -314,69 +356,117 @@ export function CalendarView() {
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
           ) : (
-            <div className="grid grid-cols-7 gap-px bg-border rounded-lg overflow-hidden">
-              {cells.map((day, idx) => {
-                if (!day) return <div key={idx} className="bg-surface/40 min-h-[72px] sm:min-h-[80px]" />;
-                const ymd = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                const isToday = ymd === today;
-                const isSelected = ymd === selectedDay;
-                const dayEvents = events.filter(e => eventSpansDay(e, ymd));
-                const isWeekend = (idx % 7 === 0 || idx % 7 === 6);
+            <div className="overflow-hidden rounded-lg border border-border">
+              <div className="grid grid-cols-7 divide-x divide-y divide-border">
+                {cells.map((day, idx) => {
+                  if (!day) {
+                    return (
+                      <div
+                        key={`empty-${idx}`}
+                        className="min-h-[64px] bg-slate-50/60 sm:min-h-[80px]"
+                      />
+                    );
+                  }
 
-                return (
-                  <button
-                    key={ymd}
-                    type="button"
-                    onClick={() => { setSelectedDay(ymd); setForm(null); setEditingId(null); }}
-                    className={cn(
-                      "group relative flex min-h-[72px] sm:min-h-[80px] flex-col gap-1 p-1.5 text-left transition-colors",
-                      isSelected ? "bg-amber-50" : isWeekend ? "bg-surface/60 hover:bg-amber-50/40" : "bg-white hover:bg-amber-50/40",
-                    )}
-                  >
-                    {/* Day number */}
-                    <span className={cn(
-                      "flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold",
-                      isToday ? "bg-primary text-white" : isSelected ? "bg-amber-200 text-amber-900" : isWeekend ? "text-muted/70" : "text-foreground",
-                    )}>
-                      {day}
-                    </span>
+                  const ymd = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                  const isToday = ymd === today;
+                  const isSelected = ymd === selectedDay;
+                  const dayEvents = events.filter(e => eventSpansDay(e, ymd));
+                  const isWeekend = (idx % 7 === 0 || idx % 7 === 6);
 
-                    {/* Event dots / chips */}
-                    <div className="flex flex-wrap gap-0.5">
-                      {dayEvents.slice(0, 3).map(e => (
-                        <span key={e.id} className={cn("h-1.5 w-1.5 rounded-full", EVENT_META[e.type].dot)} />
-                      ))}
-                      {dayEvents.length > 3 && (
-                        <span className="text-[9px] font-bold text-muted">+{dayEvents.length - 3}</span>
+                  return (
+                    // div instead of button to allow nested buttons inside
+                    <div
+                      key={ymd}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => selectDay(ymd)}
+                      onKeyDown={e => { if (e.key === "Enter" || e.key === " ") selectDay(ymd); }}
+                      className={cn(
+                        "group relative flex min-h-[64px] cursor-pointer flex-col gap-1 p-1.5 sm:min-h-[80px]",
+                        "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+                        isSelected
+                          ? "bg-amber-50"
+                          : isWeekend
+                          ? "bg-slate-50/60 hover:bg-amber-50/40"
+                          : "bg-white hover:bg-amber-50/40",
                       )}
-                    </div>
-
-                    {/* Event label (visible on larger screens) */}
-                    {dayEvents.slice(0, 2).map(e => (
-                      <span key={e.id} className={cn(
-                        "hidden truncate rounded px-1 text-[10px] font-medium sm:block",
-                        EVENT_META[e.type].chip,
-                      )}>
-                        {e.title}
-                      </span>
-                    ))}
-
-                    {/* Add button on hover */}
-                    <button
-                      type="button"
-                      onClick={(ev) => { ev.stopPropagation(); openAdd(ymd); }}
-                      className="absolute right-1 top-1 hidden rounded p-0.5 text-muted opacity-0 transition-opacity hover:bg-amber-100 hover:text-primary group-hover:opacity-100 sm:block"
                     >
-                      <Plus className="h-3 w-3" />
-                    </button>
-                  </button>
-                );
-              })}
+                      {/* Day number */}
+                      <span
+                        className={cn(
+                          "flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold",
+                          isToday
+                            ? "bg-primary text-white"
+                            : isSelected
+                            ? "bg-amber-200 text-amber-900"
+                            : isWeekend
+                            ? "text-muted/70"
+                            : "text-foreground",
+                        )}
+                      >
+                        {day}
+                      </span>
+
+                      {/* Event dots */}
+                      {dayEvents.length > 0 && (
+                        <div className="flex flex-wrap gap-0.5">
+                          {dayEvents.slice(0, 3).map(e => (
+                            <span key={e.id} className={cn("h-1.5 w-1.5 rounded-full", EVENT_META[e.type].dot)} />
+                          ))}
+                          {dayEvents.length > 3 && (
+                            <span className="text-[9px] font-bold text-muted">+{dayEvents.length - 3}</span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Event labels (md+ screens only) */}
+                      <div className="hidden flex-col gap-0.5 md:flex">
+                        {dayEvents.slice(0, 2).map(e => (
+                          <span
+                            key={e.id}
+                            className={cn(
+                              "truncate rounded px-1 text-[10px] font-medium leading-4",
+                              EVENT_META[e.type].chip,
+                            )}
+                          >
+                            {e.title}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Add button on hover — separate button inside div is valid now */}
+                      <button
+                        type="button"
+                        onClick={e => { e.stopPropagation(); openAdd(ymd); }}
+                        className="absolute right-1 top-1 hidden rounded p-0.5 text-muted opacity-0 transition-opacity hover:bg-amber-100 hover:text-primary group-hover:opacity-100 sm:block"
+                        aria-label={`Adicionar evento em ${formatDisplay(ymd)}`}
+                      >
+                        <Plus className="h-3 w-3" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Mobile: add button for selected day */}
+          {selectedDay && !form && (
+            <div className="mt-4 xl:hidden">
+              <button
+                type="button"
+                onClick={() => openAdd(selectedDay)}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-strong"
+              >
+                <Plus className="h-4 w-4" />
+                Adicionar evento em {formatDisplay(selectedDay)}
+              </button>
             </div>
           )}
         </section>
 
-        {/* ── Right panel: day detail + form ── */}
+        {/* ── Right panel: day detail + form + upcoming ── */}
         <div className="flex flex-col gap-4">
           {/* Day panel */}
           <section className="card-shadow rounded-xl border border-border bg-white/90 p-5 backdrop-blur">
@@ -386,14 +476,19 @@ export function CalendarView() {
                   {selectedDay ? formatDisplay(selectedDay) : "Selecione um dia"}
                 </p>
                 <h3 className="mt-1 text-sm font-bold text-foreground">
-                  {selectedDay === today ? "Hoje" : selectedDay
-                    ? MONTH_NAMES[month - 1]
+                  {selectedDay === today
+                    ? "Hoje"
+                    : selectedDay
+                    ? MONTH_NAMES[parseInt(selectedDay.split("-")[1]) - 1]
                     : "Clique em um dia"}
                 </h3>
               </div>
               {selectedDay && !form && (
-                <button type="button" onClick={() => openAdd(selectedDay)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white hover:bg-primary-strong">
+                <button
+                  type="button"
+                  onClick={() => openAdd(selectedDay)}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white hover:bg-primary-strong"
+                >
                   <Plus className="h-3.5 w-3.5" />
                   Adicionar
                 </button>
@@ -413,7 +508,7 @@ export function CalendarView() {
                     <EventChip
                       key={e.id}
                       event={e}
-                      onEdit={() => { openEdit(e); setSelectedDay(e.start_date); }}
+                      onEdit={() => openEdit(e)}
                       onDelete={() => handleDelete(e.id)}
                     />
                   ))
@@ -428,8 +523,11 @@ export function CalendarView() {
                   <p className="text-sm font-semibold text-foreground">
                     {editingId ? "Editar evento" : "Novo evento"}
                   </p>
-                  <button type="button" onClick={() => { setForm(null); setEditingId(null); }}
-                    className="rounded-lg p-1 text-muted hover:bg-surface">
+                  <button
+                    type="button"
+                    onClick={() => { setForm(null); setEditingId(null); }}
+                    className="rounded-lg p-1 text-muted hover:bg-surface"
+                  >
                     <X className="h-4 w-4" />
                   </button>
                 </div>
@@ -439,8 +537,12 @@ export function CalendarView() {
                   <p className="mb-2 text-xs font-medium text-muted">Tipo</p>
                   <div className="flex flex-wrap gap-1.5">
                     {(Object.keys(EVENT_META) as EventType[]).map(t => (
-                      <TypeButton key={t} type={t} selected={form.type === t}
-                        onClick={() => setForm(f => f ? { ...f, type: t } : f)} />
+                      <TypeButton
+                        key={t}
+                        type={t}
+                        selected={form.type === t}
+                        onClick={() => setForm(f => f ? { ...f, type: t } : f)}
+                      />
                     ))}
                   </div>
                 </div>
@@ -464,7 +566,17 @@ export function CalendarView() {
                     <input
                       type="date"
                       value={form.start_date}
-                      onChange={e => setForm(f => f ? { ...f, start_date: e.target.value, end_date: f.end_date < e.target.value ? e.target.value : f.end_date } : f)}
+                      onChange={e =>
+                        setForm(f =>
+                          f
+                            ? {
+                                ...f,
+                                start_date: e.target.value,
+                                end_date: f.end_date < e.target.value ? e.target.value : f.end_date,
+                              }
+                            : f,
+                        )
+                      }
                       className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm outline-none focus:border-primary"
                     />
                   </label>
@@ -512,14 +624,20 @@ export function CalendarView() {
                 )}
 
                 <div className="flex gap-2">
-                  <button type="button" onClick={handleSave}
+                  <button
+                    type="button"
+                    onClick={handleSave}
                     disabled={saving || !form.title || !form.start_date}
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-50">
-                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {saving && <Loader2 className="h-4 w-4 animate-spin" />}
                     {saving ? "Salvando..." : editingId ? "Salvar alterações" : "Criar evento"}
                   </button>
-                  <button type="button" onClick={() => { setForm(null); setEditingId(null); }}
-                    className="rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-muted hover:bg-surface">
+                  <button
+                    type="button"
+                    onClick={() => { setForm(null); setEditingId(null); }}
+                    className="rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-muted hover:bg-surface"
+                  >
                     Cancelar
                   </button>
                 </div>
@@ -544,7 +662,10 @@ export function CalendarView() {
                   const meta = EVENT_META[e.type];
                   const isMultiDay = e.start_date !== e.end_date;
                   return (
-                    <li key={e.id} className="flex items-start gap-3 rounded-lg border border-white/8 bg-white/5 px-3 py-3">
+                    <li
+                      key={e.id}
+                      className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-3"
+                    >
                       <span className={cn("mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full", meta.dot)} />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-xs font-semibold text-white">{e.title}</p>
