@@ -36,9 +36,11 @@ function SidebarContent({
         </Link>
       </div>
 
-      <SidebarNav onNavigate={onNavigate} />
+      <div className="min-h-0 flex-1 flex flex-col">
+        <SidebarNav onNavigate={onNavigate} />
+      </div>
 
-      <div className="mt-auto space-y-2">
+      <div className="shrink-0 space-y-2">
         <div className="rounded-lg border border-white/8 bg-white/5 px-3 py-3">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Sessão ativa</p>
           <p className="mt-1.5 truncate text-sm font-medium text-slate-200">{userEmail}</p>
@@ -87,7 +89,7 @@ export function AppShell({ children, userEmail, onLogout }: AppShellProps) {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
-          <aside className="card-shadow absolute left-0 top-0 flex h-full w-72 flex-col gap-6 border-r border-white/10 bg-emerald-950 px-5 py-5 text-white">
+          <aside className="card-shadow absolute left-0 top-0 flex h-full w-72 flex-col gap-4 overflow-hidden border-r border-white/10 bg-emerald-950 px-5 py-5 text-white">
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -107,7 +109,7 @@ export function AppShell({ children, userEmail, onLogout }: AppShellProps) {
 
       {/* Desktop layout */}
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 lg:flex-row lg:px-6">
-        <aside className="card-shadow hidden w-64 shrink-0 flex-col gap-6 rounded-xl border border-white/10 bg-emerald-950 px-5 py-5 text-white lg:sticky lg:top-4 lg:flex lg:h-[calc(100vh-2rem)]">
+        <aside className="card-shadow hidden w-64 shrink-0 flex-col gap-4 rounded-xl border border-white/10 bg-emerald-950 px-5 py-5 text-white lg:sticky lg:top-4 lg:flex lg:h-[calc(100vh-2rem)] lg:overflow-hidden">
           <SidebarContent userEmail={userEmail} onLogout={onLogout} />
         </aside>
 

@@ -23,8 +23,8 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-1 flex-col justify-between">
-      <ul className="space-y-1">
+    <nav className="flex min-h-0 flex-1 flex-col">
+      <ul className="flex-1 overflow-y-auto space-y-1 pb-2">
         {navigationItems.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
           return (
@@ -52,7 +52,7 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
         })}
       </ul>
 
-      <div className="mt-4 border-t border-white/8 pt-3">
+      <div className="shrink-0 mt-2 border-t border-white/8 pt-3">
         <Link
           href="/trash"
           onClick={onNavigate}
