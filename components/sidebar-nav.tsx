@@ -23,8 +23,8 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex min-h-0 flex-1 flex-col">
-      <ul className="flex-1 overflow-y-auto space-y-1 pb-2">
+    <nav className="flex flex-1 flex-col justify-between">
+      <ul className="space-y-0.5">
         {navigationItems.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
           return (
@@ -33,7 +33,7 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
                 href={href}
                 onClick={onNavigate}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium",
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium",
                   isActive
                     ? "bg-amber-500/15 text-amber-300"
                     : "text-slate-300 hover:bg-white/8 hover:text-white",
@@ -52,12 +52,12 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
         })}
       </ul>
 
-      <div className="shrink-0 mt-2 border-t border-white/8 pt-3">
+      <div className="border-t border-white/8 pt-2">
         <Link
           href="/trash"
           onClick={onNavigate}
           className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium",
+            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium",
             pathname === "/trash"
               ? "bg-rose-500/15 text-rose-300"
               : "text-slate-400 hover:bg-white/8 hover:text-slate-300",

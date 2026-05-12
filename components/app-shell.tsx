@@ -22,33 +22,29 @@ function SidebarContent({
 }) {
   return (
     <>
-      <div>
-        <Link href="/dashboard" className="flex items-center gap-2.5" onClick={onNavigate}>
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/20">
-            <BookOpen className="h-4 w-4 text-amber-400" />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-white">Alívio do Professor</p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-emerald-400">
-              IA pedagógica
-            </p>
-          </div>
-        </Link>
-      </div>
+      <Link href="/dashboard" className="flex items-center gap-2.5 shrink-0" onClick={onNavigate}>
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-500/20">
+          <BookOpen className="h-3.5 w-3.5 text-amber-400" />
+        </div>
+        <div>
+          <p className="text-sm font-bold leading-tight text-white">Alívio do Professor</p>
+          <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-emerald-400">
+            IA pedagógica
+          </p>
+        </div>
+      </Link>
 
-      <div className="min-h-0 flex-1 flex flex-col">
-        <SidebarNav onNavigate={onNavigate} />
-      </div>
+      <SidebarNav onNavigate={onNavigate} />
 
       <div className="shrink-0 space-y-2">
-        <div className="rounded-lg border border-white/8 bg-white/5 px-3 py-3">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Sessão ativa</p>
-          <p className="mt-1.5 truncate text-sm font-medium text-slate-200">{userEmail}</p>
+        <div className="rounded-lg border border-white/8 bg-white/5 px-3 py-2">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Sessão ativa</p>
+          <p className="mt-1 truncate text-xs font-medium text-slate-200">{userEmail}</p>
         </div>
         <form action={onLogout}>
           <button
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-2.5 text-sm font-medium text-slate-300 hover:bg-white/8 hover:text-white"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-white/8 hover:text-white"
           >
             <LogOut className="h-4 w-4" />
             Sair da conta
@@ -89,7 +85,7 @@ export function AppShell({ children, userEmail, onLogout }: AppShellProps) {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
-          <aside className="card-shadow absolute left-0 top-0 flex h-full w-72 flex-col gap-4 overflow-hidden border-r border-white/10 bg-emerald-950 px-5 py-5 text-white">
+          <aside className="card-shadow absolute left-0 top-0 flex h-full w-72 flex-col gap-3 border-r border-white/10 bg-emerald-950 px-4 py-4 text-white">
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -109,7 +105,7 @@ export function AppShell({ children, userEmail, onLogout }: AppShellProps) {
 
       {/* Desktop layout */}
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 lg:flex-row lg:px-6">
-        <aside className="card-shadow hidden w-64 shrink-0 flex-col gap-4 rounded-xl border border-white/10 bg-emerald-950 px-5 py-5 text-white lg:sticky lg:top-4 lg:flex lg:h-[calc(100vh-2rem)] lg:overflow-hidden">
+        <aside className="card-shadow hidden w-64 shrink-0 flex-col gap-3 rounded-xl border border-white/10 bg-emerald-950 px-4 py-4 text-white lg:sticky lg:top-4 lg:flex lg:h-[calc(100vh-2rem)]">
           <SidebarContent userEmail={userEmail} onLogout={onLogout} />
         </aside>
 
